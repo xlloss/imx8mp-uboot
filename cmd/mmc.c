@@ -10,6 +10,7 @@
 #include <mmc.h>
 #include <sparse_format.h>
 #include <image-sparse.h>
+#include <memalign.h>
 
 static int curr_device = -1;
 
@@ -847,6 +848,102 @@ static int do_mmc_setdsr(cmd_tbl_t *cmdtp, int flag,
 	return ret;
 }
 
+static int do_mmc_read_dfi_info(cmd_tbl_t *cmdtp, int flag,
+			   int argc, char * const argv[])
+{
+	#define MAC_ADDR_LEN 6
+	#define MAC_ADD_SAVE_LEN 15
+	#define SERIAL_PART "serial_number"
+	#define PART_PART "part_number"
+	#define MAC1_PART "mac1_number"
+	#define MAC2_PART "mac2_number"
+	#define PANEL_PART "panel_number"
+
+	int dev;
+	struct mmc *mmc;
+	u8 ack, org_ack, part_num, org_part_num, access, org_access;
+	u32 blk, cnt, n;
+	struct emmc_bootpart2_data *dfi_info;
+	char mac_addr1[MAC_ADD_SAVE_LEN];
+	char mac_addr2[MAC_ADD_SAVE_LEN];
+	u8 eth_mac_addr1[MAC_ADDR_LEN], eth_mac_addr2[MAC_ADDR_LEN];
+	u8 tmp[2], i = 0, j = 0;
+	const char *cp;
+
+	if (argc == 1)
+		dev = curr_device;
+	else if (argc == 2)
+		dev = simple_strtoul(argv[1], NULL, 10);
+	else
+		return CMD_RET_USAGE;
+
+	printf ("mmc dev %d\r\n", dev);
+
+	mmc = init_mmc_device(dev, true);
+	if (!mmc)
+		return CMD_RET_FAILURE;
+
+	if (mmc->part_config == MMCPART_NOAVAILABLE) {
+		printf("No part_config info for ver. 0x%x\n", mmc->version);
+		return CMD_RET_FAILURE;
+	}
+
+	ALLOC_ALIGN_BUFFER(__u8, addr,
+		sizeof(struct emmc_bootpart2_data),
+		mmc_get_blk_desc(mmc)->blksz);
+
+	dfi_info = (struct emmc_bootpart2_data *) addr;
+	org_access = EXT_CSD_EXTRACT_PARTITION_ACCESS(mmc->part_config);
+	org_ack = EXT_CSD_EXTRACT_BOOT_ACK(mmc->part_config);
+	org_part_num = EXT_CSD_EXTRACT_BOOT_PART(mmc->part_config);
+
+	/* switch to MMC_PART_BOOT_PART2 */
+	ack = 0;
+	part_num = MMC_PART_BOOT_PART2;
+	access = 2;
+	mmc_set_part_conf(mmc, ack, part_num, access);
+
+	blk = 0;
+	cnt = 1;
+	n = blk_dread(mmc_get_blk_desc(mmc), blk, cnt, addr);
+	printf("%d blocks read: %s\n", n, (n == cnt) ? "OK" : "ERROR");
+
+	printf("\n%s:%s\n"
+			"%s:%s\n"
+			"%s:%s"
+			"%s:%s"
+			"%s:%s\n",
+			SERIAL_PART, dfi_info->serial_number,
+			PART_PART, dfi_info->part_number,
+			MAC1_PART, dfi_info->mac_addr1,
+			MAC2_PART, dfi_info->mac_addr2,
+			PANEL_PART, dfi_info->lvds_panel_name);
+
+	memcpy(mac_addr1, dfi_info->mac_addr1, sizeof(char) * MAC_ADD_SAVE_LEN);
+	memcpy(mac_addr2, dfi_info->mac_addr2, sizeof(char) * MAC_ADD_SAVE_LEN);
+
+	for (i = 0; i < MAC_ADDR_LEN * 2; i = i + 2) {
+		memcpy(&tmp, &mac_addr1[i], 2);
+		cp = (const char *)&tmp;
+		eth_mac_addr1[j] = simple_strtoul(cp, NULL, 16);
+		memcpy(&tmp, &mac_addr2[i], 2);
+		cp = (const char *)&tmp;
+		eth_mac_addr2[j] = simple_strtoul(cp, NULL, 16);
+		j++;
+	}
+
+	/* erase orginial ethaddr value */
+	env_set("ethaddr", "");
+	env_set("ethaddr_eqos", "");
+	eth_env_set_enetaddr("ethaddr", eth_mac_addr1);
+	eth_env_set_enetaddr("ethaddr_eqos", eth_mac_addr2);
+
+	/* switch to org partconf */
+	mmc_set_part_conf(mmc, org_ack, org_part_num, org_access);
+
+	return 0;
+}
+
 #ifdef CONFIG_CMD_BKOPS_ENABLE
 static int do_mmc_bkops_enable(cmd_tbl_t *cmdtp, int flag,
 				   int argc, char * const argv[])
@@ -894,6 +991,7 @@ static cmd_tbl_t cmd_mmc[] = {
 	U_BOOT_CMD_MKENT(bootpart-resize, 4, 0, do_mmc_boot_resize, "", ""),
 	U_BOOT_CMD_MKENT(partconf, 5, 0, do_mmc_partconf, "", ""),
 	U_BOOT_CMD_MKENT(rst-function, 3, 0, do_mmc_rst_func, "", ""),
+	U_BOOT_CMD_MKENT(dfi-info, 2, 0, do_mmc_read_dfi_info, "", ""),
 #endif
 #if CONFIG_IS_ENABLED(CMD_MMC_RPMB)
 	U_BOOT_CMD_MKENT(rpmb, CONFIG_SYS_MAXARGS, 1, do_mmcrpmb, "", ""),
@@ -963,6 +1061,8 @@ U_BOOT_CMD(
 	"mmc rst-function dev value\n"
 	" - Change the RST_n_FUNCTION field of the specified device\n"
 	"   WARNING: This is a write-once field and 0 / 1 / 2 are the only valid values.\n"
+	"mmc dfi-info ...\n"
+	" - read serial number, mac address form boot parttion 2 \n"
 #endif
 #if CONFIG_IS_ENABLED(CMD_MMC_RPMB)
 	"mmc rpmb read addr blk# cnt [address of auth-key] - block size is 256 bytes\n"

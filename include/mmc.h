@@ -358,6 +358,8 @@ enum mmc_voltage {
  */
 #define MMC_NUM_BOOT_PARTITION	2
 #define MMC_PART_RPMB           3       /* RPMB partition number */
+#define MMC_PART_BOOT_PART1 1           /* boot partition 1 */
+#define MMC_PART_BOOT_PART2 2           /* boot partition 2 */
 
 /* Driver model support */
 
@@ -925,4 +927,21 @@ static inline enum dma_data_direction mmc_get_dma_dir(struct mmc_data *data)
 	return data->flags & MMC_DATA_WRITE ? DMA_TO_DEVICE : DMA_FROM_DEVICE;
 }
 
+struct emmc_bootpart2_data {
+
+/****************************************************************************************
+ * |< 20byte >    < 25byte >    < 5byte >    < 25byte >     < 15byte >    | < 15byte >  *
+ * |           |             |            |              |                |             *
+ * | serial    | part number | reserved1  |  Panel Name  |  MAC-1 Addr    | MAC-2 Addr  *
+ * |           |             |            |              |                |             *
+ ****************************************************************************************/
+
+	char serial_number[20];
+	char part_number[25];
+	char reserved1[5];
+	char lvds_panel_name[25];
+	char mac_addr1[15];
+	char mac_addr2[15];
+	char reserved[919];
+};
 #endif /* _MMC_H_ */

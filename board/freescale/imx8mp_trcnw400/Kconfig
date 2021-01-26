@@ -1,0 +1,14 @@
+if TARGET_IMX8MP_TRCNW400
+
+config SYS_BOARD
+	default "imx8mp_trcnw400"
+
+config SYS_VENDOR
+	default "freescale"
+
+config SYS_CONFIG_NAME
+	default "imx8mp_trcnw400"
+
+source "board/freescale/common/Kconfig"
+
+endif

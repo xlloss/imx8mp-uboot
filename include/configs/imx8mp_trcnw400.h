@@ -182,12 +182,14 @@
 /* Size of malloc() pool */
 #define CONFIG_SYS_MALLOC_LEN		SZ_32M
 
-/* Totally 6GB DDR */
+/* Totally 2GB DDR
+ * trcnw400 only 2GB DDR
+ */
 #define CONFIG_SYS_SDRAM_BASE		0x40000000
 #define PHYS_SDRAM			0x40000000
-#define PHYS_SDRAM_SIZE			0xC0000000	/* 3 GB */
+#define PHYS_SDRAM_SIZE			0x80000000	/* 2 GB */
 #define PHYS_SDRAM_2			0x100000000
-#define PHYS_SDRAM_2_SIZE		0xC0000000	/* 3 GB */
+/* #define PHYS_SDRAM_2_SIZE		0xC0000000 */	/* 3 GB */
 
 #define CONFIG_SYS_MEMTEST_START	PHYS_SDRAM
 #define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_MEMTEST_START + \

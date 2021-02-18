@@ -936,6 +936,7 @@ static int do_mmc_read_dfi_info(cmd_tbl_t *cmdtp, int flag,
 	env_set("ethaddr", "");
 	env_set("ethaddr_eqos", "");
 	eth_env_set_enetaddr("ethaddr", eth_mac_addr1);
+	eth_env_set_enetaddr("eth1addr", eth_mac_addr2);
 	eth_env_set_enetaddr("ethaddr_eqos", eth_mac_addr2);
 
 	/* switch to org partconf */

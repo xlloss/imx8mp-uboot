@@ -944,4 +944,7 @@ struct emmc_bootpart2_data {
 	char mac_addr2[15];
 	char reserved[919];
 };
+
+int do_mmc_read_dfi_info(cmd_tbl_t *cmdtp, int flag,
+			   int argc, char * const argv[]);
 #endif /* _MMC_H_ */

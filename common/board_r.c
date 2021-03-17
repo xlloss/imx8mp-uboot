@@ -599,6 +599,14 @@ static int initr_bbmii(void)
 #ifdef CONFIG_CMD_NET
 static int initr_net(void)
 {
+	int ret;
+	int argc = 2;
+	char *argv[2] = {"dfi-info", "2"};
+
+	ret = do_mmc_read_dfi_info(NULL, 0, argc, argv);
+	if (ret)
+		puts("do_mmc_read_dfi_info fail\n");
+
 	puts("Net:   ");
 	eth_initialize();
 #if defined(CONFIG_RESET_PHY_R)

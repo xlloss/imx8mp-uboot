@@ -848,7 +848,7 @@ static int do_mmc_setdsr(cmd_tbl_t *cmdtp, int flag,
 	return ret;
 }
 
-static int do_mmc_read_dfi_info(cmd_tbl_t *cmdtp, int flag,
+int do_mmc_read_dfi_info(cmd_tbl_t *cmdtp, int flag,
 			   int argc, char * const argv[])
 {
 	#define MAC_ADDR_LEN 6

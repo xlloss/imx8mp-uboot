@@ -496,6 +496,7 @@ int board_init(void)
 	call_imx_sip(FSL_SIP_GPC, FSL_SIP_CONFIG_GPC_PM_DOMAIN, DISPMIX, true, 0);
 	call_imx_sip(FSL_SIP_GPC, FSL_SIP_CONFIG_GPC_PM_DOMAIN, MIPI, true, 0);
 
+	run_command("led power on", 0);
 	return 0;
 }
 

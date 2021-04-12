@@ -469,8 +469,11 @@ int board_typec_get_mode(int index)
 #define DISPMIX				13
 #define MIPI				15
 
+#define GPIO_TO_PIN(GPIO_GROUP, GPIO_PIN) ((GPIO_GROUP - 1) * 32 + GPIO_PIN)
 int board_init(void)
 {
+	char gpio_name[15];
+
 #ifdef CONFIG_USB_TCPC
 	setup_typec();
 #endif
@@ -496,7 +499,9 @@ int board_init(void)
 	call_imx_sip(FSL_SIP_GPC, FSL_SIP_CONFIG_GPC_PM_DOMAIN, DISPMIX, true, 0);
 	call_imx_sip(FSL_SIP_GPC, FSL_SIP_CONFIG_GPC_PM_DOMAIN, MIPI, true, 0);
 
-	run_command("led power on", 0);
+	/* use gpio cmd */
+	sprintf(gpio_name, "gpio set %d\n", GPIO_TO_PIN(3, 16));
+	run_command(gpio_name, 0);
 	return 0;
 }
 

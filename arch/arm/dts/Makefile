@@ -794,6 +794,7 @@ dtb-$(CONFIG_ARCH_IMX8M) += \
 	imx8mq-evk.dtb \
 	imx8mp-evk.dtb \
 	imx8mp-trcnw400.dtb \
+	imx8mp-m8mp553.dtb \
 	imx8mm-ab2.dtb \
 	imx8mn-ddr4-ab2.dtb \
 	imx8mn-ab2.dtb

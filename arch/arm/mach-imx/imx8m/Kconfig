@@ -111,6 +111,12 @@ config TARGET_IMX8MP_TRCNW400
 	select SUPPORT_SPL
 	select IMX8M_LPDDR4
 
+config TARGET_IMX8MP_M8MP553
+	bool "imx8mp_m8mp553 LPDDR4 board"
+	select IMX8MP
+	select SUPPORT_SPL
+	select IMX8M_LPDDR4
+
 config TARGET_IMX8MM_AB2
 	bool "imx8mm LPDDR4 Audio board 2.0"
 	select IMX8MM
@@ -145,6 +151,7 @@ source "board/freescale/imx8mm_val/Kconfig"
 source "board/freescale/imx8mn_evk/Kconfig"
 source "board/freescale/imx8mp_evk/Kconfig"
 source "board/freescale/imx8mp_trcnw400/Kconfig"
+source "board/freescale/imx8mp_m8mp553/Kconfig"
 source "board/toradex/verdin-imx8mm/Kconfig"
 
 endif

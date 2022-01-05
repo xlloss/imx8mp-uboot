@@ -9,7 +9,7 @@
 #include "imx8mp.dtsi"
 
 / {
-	model = "NXP i.MX8MPlus LPDDR4 MPMP553 4G";
+	model = "DFI MPMP553";
 	compatible = "fsl,imx8mp-evk", "fsl,imx8mp";
 
 	chosen {

@@ -14,7 +14,7 @@
 #include <linux/kernel.h>
 #include <asm/arch/ddr.h>
 
-struct dram_cfg_param ddr_ddrc_cfg[] = {
+struct dram_cfg_param DDR_DDRC_CFG(4g_id0)[] = {
 	/** Initialize DDRC registers **/
 	{ 0x3d400304, 0x1 },
 	{ 0x3d400030, 0x1 },
@@ -124,7 +124,7 @@ struct dram_cfg_param ddr_ddrc_cfg[] = {
 };
 
 /* PHY Initialize Configuration */
-struct dram_cfg_param ddr_ddrphy_cfg[] = {
+struct dram_cfg_param DDR_DDRPHY_CFG(4g_id0)[] = {
 	{ 0x100a0, 0x0 },
 	{ 0x100a1, 0x1 },
 	{ 0x100a2, 0x2 },
@@ -333,7 +333,7 @@ struct dram_cfg_param ddr_ddrphy_cfg[] = {
 };
 
 /* ddr phy trained csr */
-struct dram_cfg_param ddr_ddrphy_trained_csr[] = {
+struct dram_cfg_param DDR_DDRPHY_TRAINED_CSR(4g_id0)[] = {
 	{ 0x200b2, 0x0 },
 	{ 0x1200b2, 0x0 },
 	{ 0x2200b2, 0x0 },
@@ -1055,7 +1055,7 @@ struct dram_cfg_param ddr_ddrphy_trained_csr[] = {
 	{ 0x13830, 0x0 },
 };
 /* P0 message block paremeter for training firmware */
-struct dram_cfg_param ddr_fsp0_cfg[] = {
+struct dram_cfg_param DDR_FSP0_CFG(4g_id0)[] = {
 	{ 0xd0000, 0x0 },
 	{ 0x54003, 0xfa0 },
 	{ 0x54004, 0x2 },
@@ -1095,7 +1095,7 @@ struct dram_cfg_param ddr_fsp0_cfg[] = {
 
 
 /* P1 message block paremeter for training firmware */
-struct dram_cfg_param ddr_fsp1_cfg[] = {
+struct dram_cfg_param DDR_FSP1_CFG(4g_id0)[] = {
 	{ 0xd0000, 0x0 },
 	{ 0x54002, 0x101 },
 	{ 0x54003, 0x190 },
@@ -1136,7 +1136,7 @@ struct dram_cfg_param ddr_fsp1_cfg[] = {
 
 
 /* P2 message block paremeter for training firmware */
-struct dram_cfg_param ddr_fsp2_cfg[] = {
+struct dram_cfg_param DDR_FSP2_CFG(4g_id0)[] = {
 	{ 0xd0000, 0x0 },
 	{ 0x54002, 0x102 },
 	{ 0x54003, 0x64 },
@@ -1177,7 +1177,7 @@ struct dram_cfg_param ddr_fsp2_cfg[] = {
 
 
 /* P0 2D message block paremeter for training firmware */
-struct dram_cfg_param ddr_fsp0_2d_cfg[] = {
+struct dram_cfg_param DDR_FSP0_2D_CFG(4g_id0)[] = {
 	{ 0xd0000, 0x0 },
 	{ 0x54003, 0xfa0 },
 	{ 0x54004, 0x2 },
@@ -1217,7 +1217,7 @@ struct dram_cfg_param ddr_fsp0_2d_cfg[] = {
 };
 
 /* DRAM PHY init engine image */
-struct dram_cfg_param ddr_phy_pie[] = {
+struct dram_cfg_param DDR_PHY_PIE(4g_id0)[] = {
 	{ 0xd0000, 0x0 },
 	{ 0x90000, 0x10 },
 	{ 0x90001, 0x400 },
@@ -1813,48 +1813,48 @@ struct dram_cfg_param ddr_phy_pie[] = {
 	{ 0xd0000, 0x1 }
 };
 
-struct dram_fsp_msg ddr_dram_fsp_msg[] = {
+struct dram_fsp_msg DDR_DRAM_FSP_MSG(4g_id0)[] = {
 	{
 		/* P0 4000mts 1D */
 		.drate = 4000,
 		.fw_type = FW_1D_IMAGE,
-		.fsp_cfg = ddr_fsp0_cfg,
-		.fsp_cfg_num = ARRAY_SIZE(ddr_fsp0_cfg),
+		.fsp_cfg = DDR_FSP0_CFG(4g_id0),
+		.fsp_cfg_num = ARRAY_SIZE(DDR_FSP0_CFG(4g_id0)),
 	},
 	{
 		/* P1 400mts 1D */
 		.drate = 400,
 		.fw_type = FW_1D_IMAGE,
-		.fsp_cfg = ddr_fsp1_cfg,
-		.fsp_cfg_num = ARRAY_SIZE(ddr_fsp1_cfg),
+		.fsp_cfg = DDR_FSP1_CFG(4g_id0),
+		.fsp_cfg_num = ARRAY_SIZE(DDR_FSP1_CFG(4g_id0)),
 	},
 	{
 		/* P2 100mts 1D */
 		.drate = 100,
 		.fw_type = FW_1D_IMAGE,
-		.fsp_cfg = ddr_fsp2_cfg,
-		.fsp_cfg_num = ARRAY_SIZE(ddr_fsp2_cfg),
+		.fsp_cfg = DDR_FSP2_CFG(4g_id0),
+		.fsp_cfg_num = ARRAY_SIZE(DDR_FSP2_CFG(4g_id0)),
 	},
 	{
 		/* P0 4000mts 2D */
 		.drate = 4000,
 		.fw_type = FW_2D_IMAGE,
-		.fsp_cfg = ddr_fsp0_2d_cfg,
-		.fsp_cfg_num = ARRAY_SIZE(ddr_fsp0_2d_cfg),
+		.fsp_cfg = DDR_FSP0_2D_CFG(4g_id0),
+		.fsp_cfg_num = ARRAY_SIZE(DDR_FSP0_2D_CFG(4g_id0)),
 	},
 };
 
 /* ddr timing config params */
-struct dram_timing_info dram_timing = {
-	.ddrc_cfg = ddr_ddrc_cfg,
-	.ddrc_cfg_num = ARRAY_SIZE(ddr_ddrc_cfg),
-	.ddrphy_cfg = ddr_ddrphy_cfg,
-	.ddrphy_cfg_num = ARRAY_SIZE(ddr_ddrphy_cfg),
-	.fsp_msg = ddr_dram_fsp_msg,
-	.fsp_msg_num = ARRAY_SIZE(ddr_dram_fsp_msg),
-	.ddrphy_trained_csr = ddr_ddrphy_trained_csr,
-	.ddrphy_trained_csr_num = ARRAY_SIZE(ddr_ddrphy_trained_csr),
-	.ddrphy_pie = ddr_phy_pie,
-	.ddrphy_pie_num = ARRAY_SIZE(ddr_phy_pie),
+struct dram_timing_info DRAM_TIMING(4g_id0) = {
+	.ddrc_cfg = DDR_DDRC_CFG(4g_id0),
+	.ddrc_cfg_num = ARRAY_SIZE(DDR_DDRC_CFG(4g_id0)),
+	.ddrphy_cfg = DDR_DDRPHY_CFG(4g_id0),
+	.ddrphy_cfg_num = ARRAY_SIZE(DDR_DDRPHY_CFG(4g_id0)),
+	.fsp_msg = DDR_DRAM_FSP_MSG(4g_id0),
+	.fsp_msg_num = ARRAY_SIZE(DDR_DRAM_FSP_MSG(4g_id0)),
+	.ddrphy_trained_csr = DDR_DDRPHY_TRAINED_CSR(4g_id0),
+	.ddrphy_trained_csr_num = ARRAY_SIZE(DDR_DDRPHY_TRAINED_CSR(4g_id0)),
+	.ddrphy_pie = DDR_PHY_PIE(4g_id0),
+	.ddrphy_pie_num = ARRAY_SIZE(DDR_PHY_PIE(4g_id0)),
 	.fsp_table = { 4000, 400, 100, },
 };

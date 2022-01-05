@@ -664,10 +664,32 @@ enum msg_response {
 #define DRC_PERF_MON_MRR14_DAT(X)            (DRC_PERF_MON_BASE_ADDR(X) + 0x78)
 #define DRC_PERF_MON_MRR15_DAT(X)            (DRC_PERF_MON_BASE_ADDR(X) + 0x7C)
 
+#define DRAM_TIMING(type) dram_timing##type
+#define DDR_DDRC_CFG(type) ddr_ddrc_cfg_##type
+#define DDR_DDRPHY_CFG(type) ddr_ddrphy_cfg_##type
+#define DDR_DRAM_FSP_MSG(type) ddr_dram_fsp_msg_##type
+#define DDR_DDRPHY_TRAINED_CSR(type) ddr_ddrphy_trained_csr_##type
+#define DDR_PHY_PIE(type) ddr_phy_pie_##type
+#define DDR_FSP0_CFG(type) ddr_fsp0_cfg_##type
+#define DDR_FSP1_CFG(type) ddr_fsp1_cfg_##type
+#define DDR_FSP2_CFG(type) ddr_fsp2_cfg_##type
+#define DDR_FSP0_2D_CFG(type) ddr_fsp0_2d_cfg_##type
+
 /* user data type */
 enum fw_type {
 	FW_1D_IMAGE,
 	FW_2D_IMAGE,
+};
+
+enum {
+	DDR_1G_ID_0 = 0,
+	DDR_1G_ID_1,
+	DDR_2G_ID_0,
+	DDR_2G_ID_1,
+	DDR_3G_ID_0,
+	DDR_3G_ID_1,
+	DDR_4G_ID_0,
+	DDR_4G_ID_1,
 };
 
 struct dram_cfg_param {
@@ -702,7 +724,8 @@ struct dram_timing_info {
 	unsigned int fsp_table[4];
 };
 
-extern struct dram_timing_info dram_timing;
+extern struct dram_timing_info DRAM_TIMING(2g_id0);
+extern struct dram_timing_info DRAM_TIMING(4g_id0);
 
 void ddr_load_train_firmware(enum fw_type type);
 int ddr_init(struct dram_timing_info *timing_info);

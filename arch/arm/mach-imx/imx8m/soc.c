@@ -32,6 +32,8 @@
 #include <env_internal.h>
 #include <efi_loader.h>
 
+#include <asm/mach-imx/gpio.h>
+#include <asm/arch/ddr.h>
 DECLARE_GLOBAL_DATA_PTR;
 
 #if defined(CONFIG_IMX_HAB) || defined(CONFIG_AVB_ATX) || defined(CONFIG_IMX_TRUSTY_OS)
@@ -199,10 +201,45 @@ void enable_caches(void)
 
 __weak int board_phys_sdram_size(phys_size_t *size)
 {
+	u32 id;
+	#define GPIO3_IO7 7
+	#define GPIO3_IO8 8
+	#define GPIO3_IO9 9
+	#define DDR_TYPE_ID0 (1 << GPIO3_IO7)
+	#define DDR_TYPE_ID1 (1 << GPIO3_IO8)
+	#define DDR_TYPE_ID2 (1 << GPIO3_IO9)
+
 	if (!size)
 		return -EINVAL;
 
-	*size = PHYS_SDRAM_SIZE;
+	id = readl(GPIO3_BASE_ADDR) & (DDR_TYPE_ID2 | DDR_TYPE_ID1 | DDR_TYPE_ID0);
+	id = id >> GPIO3_IO7;
+
+	switch (id) {
+	case DDR_1G_ID_0:
+	case DDR_1G_ID_1:
+		printf("%s DDR 1G ", __func__);
+		*size = 0x40000000;
+		break;
+
+	case DDR_2G_ID_0:
+	case DDR_2G_ID_1:
+		printf("%s DDR 2G ", __func__);
+		*size = 0x80000000;
+		break;
+
+	case DDR_4G_ID_0:
+	case DDR_4G_ID_1:
+		printf("%s DDR 4G ", __func__);
+		*size = 0x100000000;
+		break;
+
+	default:
+		printf("%s unknow DDR type use default 4G ", __func__);
+		*size = PHYS_SDRAM_SIZE;
+		break;
+	}
+
 	return 0;
 }
 

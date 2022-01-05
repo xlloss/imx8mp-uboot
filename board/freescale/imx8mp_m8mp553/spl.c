@@ -53,11 +53,6 @@ int spl_board_boot_device(enum boot_device boot_dev_spl)
 #endif
 }
 
-void spl_dram_init(void)
-{
-	ddr_init(&dram_timing);
-}
-
 #define I2C_PAD_CTRL (PAD_CTL_DSE6 | PAD_CTL_HYS | PAD_CTL_PUE | PAD_CTL_PE)
 #define PC MUX_PAD_CTRL(I2C_PAD_CTRL)
 struct i2c_pads_info i2c_pad_info1 = {
@@ -81,6 +76,9 @@ struct i2c_pads_info i2c_pad_info1 = {
 #define USDHC_GPIO_PAD_CTRL (PAD_CTL_HYS | PAD_CTL_DSE1)
 #define USDHC_CD_PAD_CTRL (PAD_CTL_PE |PAD_CTL_PUE |PAD_CTL_HYS | PAD_CTL_DSE4)
 
+#define BOARD_ID0 IMX_GPIO_NR(3, 7)
+#define BOARD_ID1 IMX_GPIO_NR(3, 8)
+#define BOARD_ID2 IMX_GPIO_NR(3, 9)
 
 static iomux_v3_cfg_t const usdhc3_pads[] = {
 	MX8MP_PAD_NAND_WE_B__USDHC3_CLK | MUX_PAD_CTRL(USDHC_PAD_CTRL),
@@ -106,10 +104,55 @@ static iomux_v3_cfg_t const usdhc2_pads[] = {
 	MX8MP_PAD_SD2_CD_B__GPIO2_IO12    | MUX_PAD_CTRL(USDHC_CD_PAD_CTRL),
 };
 
+#define BOARD_ID_N 3
+
 static struct fsl_esdhc_cfg usdhc_cfg[2] = {
 	{USDHC2_BASE_ADDR, 0, 4},
 	{USDHC3_BASE_ADDR, 0, 8},
 };
+
+unsigned board_id_pin[BOARD_ID_N] = {BOARD_ID0, BOARD_ID1, BOARD_ID2};
+
+const char board_id_pin_name[BOARD_ID_N][10] = {"board_id0",
+		"board_id1", "board_id2"};
+
+void spl_dram_init(void)
+{
+	unsigned char i, id, tmp;
+
+	id = 0;
+	for (i = 0; i < BOARD_ID_N; i++) {
+		gpio_request(board_id_pin[i], board_id_pin_name[i]);
+		gpio_direction_input(board_id_pin[i]);
+		tmp = gpio_get_value(board_id_pin[i]);
+		id = id + (tmp << i);
+	}
+
+	switch (id) {
+	case DDR_1G_ID_0:
+	case DDR_1G_ID_1:
+		printf("%s DDR 1G ", __func__);
+		break;
+
+	case DDR_2G_ID_0:
+	case DDR_2G_ID_1:
+		printf("%s DDR 2G ", __func__);
+		ddr_init(&DRAM_TIMING(2g_id0));
+		break;
+
+	case DDR_4G_ID_0:
+	case DDR_4G_ID_1:
+		printf("%s DDR 4G ", __func__);
+		ddr_init(&DRAM_TIMING(4g_id0));
+		break;
+
+	default:
+		printf("%s unknow DDR type use default 4G", __func__);
+		ddr_init(&DRAM_TIMING(4g_id0));
+		break;
+
+	}
+}
 
 int board_mmc_init(bd_t *bis)
 {

@@ -14,6 +14,7 @@
 #include <linux/kernel.h>
 #include <asm/arch/ddr.h>
 
+/* MT53D512M32D2 */
 struct dram_cfg_param DDR_DDRC_CFG(2g_id0)[] = {
 	/** Initialize DDRC registers **/
 	{ 0x3d400304, 0x1 },

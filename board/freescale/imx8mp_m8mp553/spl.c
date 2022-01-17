@@ -142,13 +142,13 @@ void spl_dram_init(void)
 
 	case DDR_4G_ID_0:
 	case DDR_4G_ID_1:
-		printf("%s DDR 4G ", __func__);
-		ddr_init(&DRAM_TIMING(4g_id0));
+		printf("%s DDR 4G 4g_id1", __func__);
+		ddr_init(&DRAM_TIMING(4g_id1));
 		break;
 
 	default:
-		printf("%s unknow DDR type use default 4G", __func__);
-		ddr_init(&DRAM_TIMING(4g_id0));
+		printf("%s unknow DDR type use default 4G 4g_id1", __func__);
+		ddr_init(&DRAM_TIMING(4g_id1));
 		break;
 
 	}

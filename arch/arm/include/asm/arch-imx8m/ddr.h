@@ -726,6 +726,7 @@ struct dram_timing_info {
 
 extern struct dram_timing_info DRAM_TIMING(2g_id0);
 extern struct dram_timing_info DRAM_TIMING(4g_id0);
+extern struct dram_timing_info DRAM_TIMING(4g_id1);
 
 void ddr_load_train_firmware(enum fw_type type);
 int ddr_init(struct dram_timing_info *timing_info);

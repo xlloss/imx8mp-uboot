@@ -682,14 +682,10 @@ enum fw_type {
 };
 
 enum {
-	DDR_1G_ID_0 = 0,
-	DDR_1G_ID_1,
-	DDR_2G_ID_0,
-	DDR_2G_ID_1,
-	DDR_3G_ID_0,
-	DDR_3G_ID_1,
-	DDR_4G_ID_0,
-	DDR_4G_ID_1,
+	DDR_1G = 0,
+	DDR_2G,
+	DDR_3G,
+	DDR_4G,
 };
 
 struct dram_cfg_param {

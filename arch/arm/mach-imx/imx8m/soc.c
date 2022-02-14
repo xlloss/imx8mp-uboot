@@ -202,34 +202,29 @@ void enable_caches(void)
 __weak int board_phys_sdram_size(phys_size_t *size)
 {
 	u32 id;
-	#define GPIO3_IO7 7
 	#define GPIO3_IO8 8
 	#define GPIO3_IO9 9
-	#define DDR_TYPE_ID0 (1 << GPIO3_IO7)
 	#define DDR_TYPE_ID1 (1 << GPIO3_IO8)
 	#define DDR_TYPE_ID2 (1 << GPIO3_IO9)
 
 	if (!size)
 		return -EINVAL;
 
-	id = readl(GPIO3_BASE_ADDR) & (DDR_TYPE_ID2 | DDR_TYPE_ID1 | DDR_TYPE_ID0);
-	id = id >> GPIO3_IO7;
+	id = readl(GPIO3_BASE_ADDR) & (DDR_TYPE_ID2 | DDR_TYPE_ID1);
+	id = id >> GPIO3_IO8;
 
 	switch (id) {
-	case DDR_1G_ID_0:
-	case DDR_1G_ID_1:
+	case DDR_1G:
 		printf("%s DDR 1G ", __func__);
 		*size = 0x40000000;
 		break;
 
-	case DDR_2G_ID_0:
-	case DDR_2G_ID_1:
+	case DDR_2G:
 		printf("%s DDR 2G ", __func__);
 		*size = 0x80000000;
 		break;
 
-	case DDR_4G_ID_0:
-	case DDR_4G_ID_1:
+	case DDR_4G:
 		printf("%s DDR 4G ", __func__);
 		*size = 0x100000000;
 		break;

@@ -76,7 +76,6 @@ struct i2c_pads_info i2c_pad_info1 = {
 #define USDHC_GPIO_PAD_CTRL (PAD_CTL_HYS | PAD_CTL_DSE1)
 #define USDHC_CD_PAD_CTRL (PAD_CTL_PE |PAD_CTL_PUE |PAD_CTL_HYS | PAD_CTL_DSE4)
 
-#define BOARD_ID0 IMX_GPIO_NR(3, 7)
 #define BOARD_ID1 IMX_GPIO_NR(3, 8)
 #define BOARD_ID2 IMX_GPIO_NR(3, 9)
 
@@ -104,17 +103,16 @@ static iomux_v3_cfg_t const usdhc2_pads[] = {
 	MX8MP_PAD_SD2_CD_B__GPIO2_IO12    | MUX_PAD_CTRL(USDHC_CD_PAD_CTRL),
 };
 
-#define BOARD_ID_N 3
+#define BOARD_ID_N 2
 
 static struct fsl_esdhc_cfg usdhc_cfg[2] = {
 	{USDHC2_BASE_ADDR, 0, 4},
 	{USDHC3_BASE_ADDR, 0, 8},
 };
 
-unsigned board_id_pin[BOARD_ID_N] = {BOARD_ID0, BOARD_ID1, BOARD_ID2};
+unsigned board_id_pin[BOARD_ID_N] = {BOARD_ID1, BOARD_ID2};
 
-const char board_id_pin_name[BOARD_ID_N][10] = {"board_id0",
-		"board_id1", "board_id2"};
+const char board_id_pin_name[BOARD_ID_N][10] = {"board_id1", "board_id2"};
 
 void spl_dram_init(void)
 {
@@ -129,19 +127,16 @@ void spl_dram_init(void)
 	}
 
 	switch (id) {
-	case DDR_1G_ID_0:
-	case DDR_1G_ID_1:
+	case DDR_1G:
 		printf("%s DDR 1G ", __func__);
 		break;
 
-	case DDR_2G_ID_0:
-	case DDR_2G_ID_1:
+	case DDR_2G:
 		printf("%s DDR 2G ", __func__);
 		ddr_init(&DRAM_TIMING(2g_id0));
 		break;
 
-	case DDR_4G_ID_0:
-	case DDR_4G_ID_1:
+	case DDR_4G:
 		printf("%s DDR 4G 4g_id1", __func__);
 		ddr_init(&DRAM_TIMING(4g_id1));
 		break;

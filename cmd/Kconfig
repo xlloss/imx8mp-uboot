@@ -1742,6 +1742,12 @@ config CMD_QFW
 	  feature is to allow easy loading of files passed to qemu-system
 	  via -kernel / -initrd
 
+config IMX8MP_SOC_ID
+	bool "imx8mp soc type id"
+	depends on TARGET_IMX8MP_M8MP553
+	help
+	  use gpio to distinguish soc type (thermal temperature)
+
 source "cmd/mvebu/Kconfig"
 
 config CMD_TERMINAL

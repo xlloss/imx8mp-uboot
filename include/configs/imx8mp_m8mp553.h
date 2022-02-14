@@ -101,6 +101,8 @@
 	"fdt_addr=0x43000000\0"			\
 	"fdt_high=0xffffffffffffffff\0"		\
 	"boot_fit=no\0" \
+	"soc_type_id_pin=71\0" \
+	"check_soc_type=if test ${soc_type} = 0; then setenv fdt_file imx8mp-m8mp553c.dtb; else setenv fdt_file imx8mp-m8mp553i.dtb; fi\0" \
 	"fdt_file=" CONFIG_DEFAULT_FDT_FILE "\0" \
 	"initrd_addr=0x43800000\0"		\
 	"initrd_high=0xffffffffffffffff\0" \
@@ -115,7 +117,7 @@
 	"loadimage=fatload mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
 	"loadfdt=fatload mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
 	"mmcboot=echo Booting from mmc ...; " \
-		"mmc dfi-info 2; run mmcargs; " \
+		"soc_type ${soc_type_id_pin}; run check_soc_type; mmc dfi-info 2; run mmcargs; " \
 		"if test ${boot_fit} = yes || test ${boot_fit} = try; then " \
 			"bootm ${loadaddr}; " \
 		"else " \

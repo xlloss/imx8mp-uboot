@@ -168,7 +168,7 @@ obj-$(CONFIG_CMD_DFU) += dfu.o
 obj-$(CONFIG_CMD_GPT) += gpt.o
 obj-$(CONFIG_CMD_ETHSW) += ethsw.o
 obj-$(CONFIG_CMD_AXI) += axi.o
-obj-$(CONFIG_CMD_THERMAL_ID) += soc_type.o
+obj-$(CONFIG_IMX8MP_SOC_ID) += soc_type.o
 
 # Power
 obj-$(CONFIG_CMD_PMIC) += pmic.o
